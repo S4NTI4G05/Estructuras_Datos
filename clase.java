@@ -20,15 +20,13 @@ public class clase {
         notas[2][2] = 4.0;
         notas[2][3] = 4.5;
 
-      for (int i = 0; i < notas.length; i++) {
-            double suma = 0;
-            for (int j = 0; j < notas[i].length; j++) {
-                suma += notas[i][j];
-            }
+        for (int i = 0; i < notas.length; i++) {
+                double suma = 0;
+                for (int j = 0; j < notas[i].length; j++) {
+                    suma += notas[i][j];
+                }
             double promedio = suma / notas[i].length;
             System.out.println("El promedio del estudiante " + (i + 1) + " es: " + promedio);
         } 
     }
-
-    
 }
