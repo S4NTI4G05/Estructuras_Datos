@@ -1,5 +1,3 @@
-package CLASE2;
-
 public class Library {
     private Book[] books;
     private int bookCount;  // Why do we need this?
