@@ -34,13 +34,13 @@ public class LibraryUI {
 
         boolean running = true;
         while (running) {
-            System.out.println("\n==== Library Menu ====");
-            System.out.println("1) Books");
-            System.out.println("2) Users");
-            System.out.println("3) Loans");
-            System.out.println("4) Undo last operation");
-            System.out.println("0) Exit");
-            System.out.print("Choose: ");
+            System.out.println("\n==== Menú Biblioteca ====");
+            System.out.println("1) Libros");
+            System.out.println("2) Usuarios");
+            System.out.println("3) Préstamos");
+            System.out.println("4) Deshacer última operación");
+            System.out.println("0) Salir");
+            System.out.print("Elige: ");
             String opt = sc.nextLine();
 
             if ("1".equals(opt))
@@ -54,61 +54,61 @@ public class LibraryUI {
             else if ("0".equals(opt))
                 running = false;
             else
-                System.out.println("Invalid option.");
+                System.out.println("Opción inválida.");
         }
         sc.close();
-        System.out.println("Bye!");
+        System.out.println("¡Adiós!");
     }
 
     private static void booksMenu(Scanner sc, Library lib) {
         boolean back = false;
         while (!back) {
-            System.out.println("\n-- Books --");
-            System.out.println("1) Add");
-            System.out.println("2) Update");
-            System.out.println("3) Remove");
-            System.out.println("4) List");
-            System.out.println("5) Search by title");
-            System.out.println("6) Search by author");
-            System.out.println("7) Search by ISBN");
-            System.out.println("0) Back");
-            System.out.print("Choose: ");
+            System.out.println("\n-- Libros --");
+            System.out.println("1) Agregar");
+            System.out.println("2) Actualizar");
+            System.out.println("3) Eliminar");
+            System.out.println("4) Listar");
+            System.out.println("5) Buscar por título");
+            System.out.println("6) Buscar por autor");
+            System.out.println("7) Buscar por ISBN");
+            System.out.println("0) Volver");
+            System.out.print("Elige: ");
             String o = sc.nextLine();
 
             if ("1".equals(o)) {
                 System.out.print("ISBN: ");
                 String isbn = sc.nextLine();
-                System.out.print("Title: ");
+                System.out.print("Título: ");
                 String title = sc.nextLine();
-                System.out.print("Author: ");
+                System.out.print("Autor: ");
                 String author = sc.nextLine();
-                System.out.print("Category: ");
+                System.out.print("Categoría: ");
                 String cat = sc.nextLine();
                 lib.addBook(new Book(isbn, title, author, cat));
             } else if ("2".equals(o)) {
-                System.out.print("ISBN to update: ");
+                System.out.print("ISBN a actualizar: ");
                 String isbn = sc.nextLine();
-                System.out.print("New Title: ");
+                System.out.print("Nuevo título: ");
                 String title = sc.nextLine();
-                System.out.print("New Author: ");
+                System.out.print("Nuevo autor: ");
                 String author = sc.nextLine();
-                System.out.print("New Category: ");
+                System.out.print("Nueva categoría: ");
                 String cat = sc.nextLine();
                 if (!lib.updateBook(isbn, title, author, cat))
-                    System.out.println("Not found.");
+                    System.out.println("No encontrado.");
             } else if ("3".equals(o)) {
-                System.out.print("ISBN to remove: ");
+                System.out.print("ISBN a eliminar: ");
                 String isbn = sc.nextLine();
                 if (!lib.removeBook(isbn))
-                    System.out.println("Not found.");
+                    System.out.println("No encontrado.");
             } else if ("4".equals(o)) {
                 lib.listBooks();
             } else if ("5".equals(o)) {
-                System.out.print("Title contains: ");
+                System.out.print("Título contiene: ");
                 String q = sc.nextLine();
                 lib.searchByTitle(q);
             } else if ("6".equals(o)) {
-                System.out.print("Author contains: ");
+                System.out.print("Autor contiene: ");
                 String q = sc.nextLine();
                 lib.searchByAuthor(q);
             } else if ("7".equals(o)) {
@@ -118,66 +118,66 @@ public class LibraryUI {
             } else if ("0".equals(o))
                 back = true;
             else
-                System.out.println("Invalid option.");
+                System.out.println("Opción inválida.");
         }
     }
 
     private static void usersMenu(Scanner sc, Library lib) {
         boolean back = false;
         while (!back) {
-            System.out.println("\n-- Users --");
-            System.out.println("1) Register");
-            System.out.println("2) Remove");
-            System.out.println("3) List");
-            System.out.println("4) Search by name");
-            System.out.println("0) Back");
-            System.out.print("Choose: ");
+            System.out.println("\n-- Usuarios --");
+            System.out.println("1) Registrar");
+            System.out.println("2) Eliminar");
+            System.out.println("3) Listar");
+            System.out.println("4) Buscar por nombre");
+            System.out.println("0) Volver");
+            System.out.print("Elige: ");
             String o = sc.nextLine();
 
             if ("1".equals(o)) {
-                System.out.print("User id: ");
+                System.out.print("ID de usuario: ");
                 String id = sc.nextLine();
-                System.out.print("Name: ");
+                System.out.print("Nombre: ");
                 String name = sc.nextLine();
                 lib.registerUser(new User(id, name));
             } else if ("2".equals(o)) {
-                System.out.print("User id to remove: ");
+                System.out.print("ID de usuario a eliminar: ");
                 String id = sc.nextLine();
                 if (!lib.removeUser(id))
-                    System.out.println("Not found.");
+                    System.out.println("No encontrado.");
             } else if ("3".equals(o)) {
                 lib.listUsers();
             } else if ("4".equals(o)) {
-                System.out.print("Name contains: ");
+                System.out.print("Nombre contiene: ");
                 String q = sc.nextLine();
                 lib.searchUserByName(q);
             } else if ("0".equals(o))
                 back = true;
             else
-                System.out.println("Invalid option.");
+                System.out.println("Opción inválida.");
         }
     }
 
     private static void loansMenu(Scanner sc, Library lib) {
         boolean back = false;
         while (!back) {
-            System.out.println("\n-- Loans --");
-            System.out.println("1) Borrow");
-            System.out.println("2) Return");
-            System.out.println("3) List active loans");
-            System.out.println("4) History");
-            System.out.println("0) Back");
-            System.out.print("Choose: ");
+            System.out.println("\n-- Préstamos --");
+            System.out.println("1) Prestar");
+            System.out.println("2) Devolver");
+            System.out.println("3) Listar préstamos activos");
+            System.out.println("4) Historial");
+            System.out.println("0) Volver");
+            System.out.print("Elige: ");
             String o = sc.nextLine();
 
             if ("1".equals(o)) {
-                System.out.print("User id: ");
+                System.out.print("ID de usuario: ");
                 String uid = sc.nextLine();
                 System.out.print("ISBN: ");
                 String isbn = sc.nextLine();
                 lib.borrow(uid, isbn);
             } else if ("2".equals(o)) {
-                System.out.print("User id: ");
+                System.out.print("ID de usuario: ");
                 String uid = sc.nextLine();
                 System.out.print("ISBN: ");
                 String isbn = sc.nextLine();
@@ -189,7 +189,7 @@ public class LibraryUI {
             } else if ("0".equals(o))
                 back = true;
             else
-                System.out.println("Invalid option.");
+                System.out.println("Opción inválida.");
         }
     }
 }

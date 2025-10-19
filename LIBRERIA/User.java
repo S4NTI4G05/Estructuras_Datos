@@ -15,35 +15,38 @@
  * - Mantiene un registro de los libros que ha pedido.
  */
 
- import java.util.LinkedList;
+import java.util.LinkedList;
 
 public class User {
     private String id;
-    private String name;
-    private LinkedList<String> loanHistory = new LinkedList<String>();
+    private String nombre;
+    private LinkedList<String> historialPrestamos = new LinkedList<String>();
 
-    public User(String id, String name) {
+    public User(String id, String nombre) {
         this.id = id;
-        this.name = name;
+        this.nombre = nombre;
     }
 
     public String getId() {
         return id;
     }
 
+    // Conservamos el nombre del método público para no romper llamadas externas
     public String getName() {
-        return name;
+        return nombre;
     }
 
+    // Conservamos la firma pública setName()
     public void setName(String n) {
-        this.name = n;
+        this.nombre = n;
     }
 
+    // Conservamos la firma pública getLoanHistory()
     public LinkedList<String> getLoanHistory() {
-        return loanHistory;
+        return historialPrestamos;
     }
 
     public String toString() {
-        return "[id=" + id + ", name=" + name + ", history=" + loanHistory.size() + "]";
+        return "[id=" + id + ", nombre=" + nombre + ", historial=" + historialPrestamos.size() + "]";
     }
 }

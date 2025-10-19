@@ -1,0 +1,25 @@
+/**
+ * Respaldo de CLASE 5/Book.java
+ */
+public class BookBackup {
+    String name;
+    String author;
+    String isbn;
+    String category;
+
+    public BookBackup(String name, String author, String isbn, String category){
+        this.name = name;
+        this.author = author;
+        this.isbn = isbn;
+        this.category = category;
+    }
+
+    public BookBackup () {
+        super();
+    }
+
+    public String toString(){
+        return "Book name : " +name + " | Book Author : " +
+         author + " |  Book isbn :" + isbn + " | Book category : " +  category;
+    }
+}

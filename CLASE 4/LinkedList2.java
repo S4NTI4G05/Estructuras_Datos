@@ -1,42 +1,42 @@
-public class LinkedList {
-    private Node head;
+public class LinkedList2 {
+    private Node2 head;
 
-    public Node getHead() {
+    public Node2 getHead() {
         return head;
     }
 
-    public void setHead(Node head) {
+    public void setHead(Node2 head) {
         this.head = head;
     }
 
     public void add(Object o) {
         if (head == null) {
-            head = new Node(o);
+            head = new Node2(o);
         } else {
-            Node newHead = new Node(o);
-            newHead.setNext(head);
+            Node2 newHead = new Node2(o);
+            newHead.setNextnNode(head);
             head = newHead;
         }
     }
 
     @Override
     public String toString() {
-        Node iter = head;
+        Node2 iter = head;
         StringBuilder sb = new StringBuilder();
         while (iter != null) {
             if (sb.length() > 0) sb.append(",");
             sb.append(iter.getData());
-            iter = iter.getNext();
+            iter = iter.getNextnNode();
         }
         return sb.toString();
     }
 
     public int size() {
-        Node iter = head;
+        Node2 iter = head;
         int size = 0;
         while (iter != null) {
             size++;
-            iter = iter.getNext();
+            iter = iter.getNextnNode();
         }
         return size;
     }
@@ -44,17 +44,17 @@ public class LinkedList {
     public void delete(int index) {
         if (head == null) return;
         if (index == 0) {
-            head = head.getNext();
+            head = head.getNextnNode();
             return;
         }
-        Node iter = head;
+        Node2 iter = head;
         int i = 0;
-        while (iter != null && iter.getNext() != null) {
+        while (iter != null && iter.getNextnNode() != null) {
             if (i + 1 == index) {
-                iter.setNext(iter.getNext().getNext());
+                iter.setNextnNode(iter.getNextnNode().getNextnNode());
                 return;
             }
-            iter = iter.getNext();
+            iter = iter.getNextnNode();
             i++;
         }
     }

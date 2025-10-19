@@ -16,29 +16,29 @@
  */
 
  public class Operation {
-    private OperationType type;
-    private String a, b, c; // generic payload (A,B,C)
+    private OperationType tipo;
+    private String datoA, datoB, datoC; // carga genérica (A,B,C)
 
     public Operation(OperationType t, String a, String b, String c) {
-        this.type = t;
-        this.a = a;
-        this.b = b;
-        this.c = c;
+        this.tipo = t;
+        this.datoA = a;
+        this.datoB = b;
+        this.datoC = c;
     }
 
     public OperationType getType() {
-        return type;
+        return tipo;
     }
 
     public String getA() {
-        return a;
+        return datoA;
     }
 
     public String getB() {
-        return b;
+        return datoB;
     }
 
     public String getC() {
-        return c;
+        return datoC;
     }
 }

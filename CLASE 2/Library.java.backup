@@ -1,0 +1,9 @@
+public class LibraryBackup {
+    private Book[] books;
+    private int bookCount;
+
+    public LibraryBackup(int capacity) {
+        books = new Book[capacity];
+        bookCount = 0;
+    }
+}

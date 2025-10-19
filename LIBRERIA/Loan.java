@@ -12,16 +12,16 @@
  */
 
  public class Loan {
-    private String userId;
+    private String usuarioId;
     private String isbn;
 
-    public Loan(String userId, String isbn) {
-        this.userId = userId;
+    public Loan(String usuarioId, String isbn) {
+        this.usuarioId = usuarioId;
         this.isbn = isbn;
     }
 
     public String getUserId() {
-        return userId;
+        return usuarioId;
     }
 
     public String getIsbn() {
@@ -29,6 +29,6 @@
     }
 
     public String toString() {
-        return "[Loan user=" + userId + ", isbn=" + isbn + "]";
+        return "[Préstamo usuario=" + usuarioId + ", isbn=" + isbn + "]";
     }
 }

@@ -15,26 +15,28 @@
  * - Guarda los datos del libro.
  * - Permite saber si está libre o prestado.
  * - Mantiene una cola de usuarios que esperan por el libro.
- */
+*/
 
- import java.util.LinkedList;
+import java.util.LinkedList;
 import java.util.Queue;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Book {
     private String isbn;
-    private String title;
-    private String author;
-    private String category; // simple category (String)
-    private boolean available; // one-copy model
-    private Queue<String> waitingList; // FIFO reservations by userId
+    private String titulo;
+    private String autor;
+    private String categoria; // categoría simple (String)
+    private boolean disponible; // modelo de una copia
+    private final Queue<String> colaEspera = new LinkedList<>();
 
     public Book(String isbn, String title, String author, String category) {
         this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.category = category;
-        this.available = true;
-        this.waitingList = new LinkedList<String>();
+        this.titulo = title;
+        this.autor = author;
+        this.categoria = category;
+        this.disponible = true;
     }
 
     public String getIsbn() {
@@ -42,45 +44,78 @@ public class Book {
     }
 
     public String getTitle() {
-        return title;
+        return titulo;
     }
 
     public String getAuthor() {
-        return author;
+        return autor;
     }
 
     public String getCategory() {
-        return category;
+        return categoria;
     }
 
     public boolean isAvailable() {
-        return available;
+        return disponible;
     }
 
     public void setTitle(String t) {
-        this.title = t;
+        this.titulo = t;
     }
 
     public void setAuthor(String a) {
-        this.author = a;
+        this.autor = a;
     }
 
     public void setCategory(String c) {
-        this.category = c;
+        this.categoria = c;
     }
 
     public void setAvailable(boolean a) {
-        this.available = a;
+        this.disponible = a;
     }
 
+    /**
+     * Devuelve la cola interna de espera (IDs de usuario).
+     */
     public Queue<String> getWaitingList() {
-        return waitingList;
+        return colaEspera;
+    }
+
+    /**
+     * Añade un ID de usuario a la cola de espera si no está ya.
+     */
+    public synchronized void enqueueWaitingUser(String userId) {
+        if (userId == null) return;
+        if (!colaEspera.contains(userId))
+            colaEspera.add(userId);
+    }
+
+    /**
+     * Devuelve y elimina el siguiente ID en la lista de espera, o null si está vacía.
+     */
+    public synchronized String pollWaitingUser() {
+        return colaEspera.poll();
+    }
+
+    /**
+     * Elimina a un usuario de la lista de espera.
+     */
+    public synchronized boolean removeWaitingUser(String userId) {
+        return colaEspera.remove(userId);
+    }
+
+    /**
+     * Tamaño de la lista de espera.
+     */
+    public int getWaitingListSize() {
+        return colaEspera.size();
     }
 
     @Override
     public String toString() {
-        return "[ISBN=" + isbn + ", title=" + title + ", author=" + author +
-                ", category=" + category + ", available=" + available +
-                ", queue=" + waitingList.size() + "]";
+        return "[ISBN=" + isbn + ", título=" + titulo + ", autor=" + autor +
+        ", categoría=" + categoria + ", disponible=" + disponible +
+        ", cola=" + colaEspera.size() + "]";
     }
 }

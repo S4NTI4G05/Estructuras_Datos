@@ -39,23 +39,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.time.LocalDate;
 
 public class Library {
-    // Data stores
-    private ArrayList<Book> books = new ArrayList<Book>();
-    private ArrayList<User> users = new ArrayList<User>();
-    private ArrayList<Loan> activeLoans = new ArrayList<Loan>();
-    private LinkedList<String> operationHistory = new LinkedList<String>(); // latest first
-    private Stack<Operation> undoStack;
+    // Almacenamiento de datos
+    private ArrayList<Book> libros = new ArrayList<Book>();
+    private ArrayList<User> usuarios = new ArrayList<User>();
+    private ArrayList<Loan> prestamosActivos = new ArrayList<Loan>();
+    private LinkedList<String> historialOperaciones = new LinkedList<String>(); // últimas primero
+    private Stack<Operation> pilaDeshacer;
 
     public Library(Stack<Operation> undoStack) {
-        this.undoStack = undoStack;
+        this.pilaDeshacer = undoStack;
     }
 
     // ===== BOOKS =====
     public Book findBook(String isbn) {
-        for (int i = 0; i < books.size(); i++) {
-            Book b = books.get(i);
+        for (int i = 0; i < libros.size(); i++) {
+            Book b = libros.get(i);
             if (b.getIsbn().equals(isbn))
                 return b;
         }
@@ -63,9 +64,9 @@ public class Library {
     }
 
     public void addBook(Book b) {
-        books.add(b);
-        // inverse action for undo: remove the added book
-        undoStack.push(new Operation(OperationType.REMOVE_BOOK, b.getIsbn(), b.getTitle(),
+        libros.add(b);
+        // acción inversa para deshacer: eliminar el libro añadido
+        pilaDeshacer.push(new Operation(OperationType.REMOVE_BOOK, b.getIsbn(), b.getTitle(),
                 b.getAuthor() + "\t" + b.getCategory()));
     }
 
@@ -81,18 +82,18 @@ public class Library {
         b.setAuthor(newAuthor);
         b.setCategory(newCategory);
 
-        // inverse: restore previous fields
-        undoStack.push(new Operation(OperationType.UPDATE_BOOK, isbn, oldTitle, oldAuthor + "\t" + oldCat));
+        // inversa: restaurar campos anteriores
+        pilaDeshacer.push(new Operation(OperationType.UPDATE_BOOK, isbn, oldTitle, oldAuthor + "\t" + oldCat));
         return true;
     }
 
     public boolean removeBook(String isbn) {
-        for (int i = 0; i < books.size(); i++) {
-            Book b = books.get(i);
+        for (int i = 0; i < libros.size(); i++) {
+            Book b = libros.get(i);
             if (b.getIsbn().equals(isbn)) {
-                books.remove(i);
-                // inverse: re-add book with its old fields
-                undoStack.push(new Operation(OperationType.ADD_BOOK, isbn, b.getTitle(),
+                libros.remove(i);
+                // inversa: volver a añadir el libro con sus campos
+                pilaDeshacer.push(new Operation(OperationType.ADD_BOOK, isbn, b.getTitle(),
                         b.getAuthor() + "\t" + b.getCategory()));
                 return true;
             }
@@ -101,23 +102,23 @@ public class Library {
     }
 
     public void listBooks() {
-        System.out.println("=== Books ===");
-        Iterator<Book> it = books.iterator();
+        System.out.println("=== Libros ===");
+        Iterator<Book> it = libros.iterator();
         while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
     }
 
     public void searchByTitle(String q) {
-        for (int i = 0; i < books.size(); i++) {
-            Book b = books.get(i);
+        for (int i = 0; i < libros.size(); i++) {
+            Book b = libros.get(i);
             if (b.getTitle().toLowerCase().indexOf(q.toLowerCase()) >= 0)
                 System.out.println(b);
         }
     }
 
     public void searchByAuthor(String q) {
-        Iterator<Book> it = books.iterator();
+        Iterator<Book> it = libros.iterator();
         while (it.hasNext()) {
             Book b = it.next();
             if (b.getAuthor().toLowerCase().indexOf(q.toLowerCase()) >= 0)
@@ -127,31 +128,31 @@ public class Library {
 
     public void searchByIsbn(String isbn) {
         Book b = findBook(isbn);
-        System.out.println(b == null ? "Not found" : b.toString());
+        System.out.println(b == null ? "No encontrado" : b.toString());
     }
 
     // ===== USERS =====
     public User findUser(String id) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId().equals(id))
-                return users.get(i);
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getId().equals(id))
+                return usuarios.get(i);
         }
         return null;
     }
 
     public void registerUser(User u) {
-        users.add(u);
-        // inverse: remove registered user
-        undoStack.push(new Operation(OperationType.REMOVE_USER, u.getId(), u.getName(), null));
+        usuarios.add(u);
+        // inversa: eliminar usuario registrado
+        pilaDeshacer.push(new Operation(OperationType.REMOVE_USER, u.getId(), u.getName(), null));
     }
 
     public boolean removeUser(String id) {
-        for (int i = 0; i < users.size(); i++) {
-            User u = users.get(i);
+        for (int i = 0; i < usuarios.size(); i++) {
+            User u = usuarios.get(i);
             if (u.getId().equals(id)) {
-                users.remove(i);
-                // inverse: re-register the removed user
-                undoStack.push(new Operation(OperationType.REGISTER_USER, u.getId(), u.getName(), null));
+                usuarios.remove(i);
+                // inversa: volver a registrar el usuario eliminado
+                pilaDeshacer.push(new Operation(OperationType.REGISTER_USER, u.getId(), u.getName(), null));
                 return true;
             }
         }
@@ -159,15 +160,15 @@ public class Library {
     }
 
     public void listUsers() {
-        System.out.println("=== Users ===");
-        Iterator<User> it = users.iterator();
+        System.out.println("=== Usuarios ===");
+        Iterator<User> it = usuarios.iterator();
         while (it.hasNext())
             System.out.println(it.next());
     }
 
     public void searchUserByName(String q) {
-        for (int i = 0; i < users.size(); i++) {
-            User u = users.get(i);
+        for (int i = 0; i < usuarios.size(); i++) {
+            User u = usuarios.get(i);
             if (u.getName().toLowerCase().indexOf(q.toLowerCase()) >= 0)
                 System.out.println(u);
         }
@@ -178,95 +179,96 @@ public class Library {
         User u = findUser(userId);
         Book b = findBook(isbn);
         if (u == null || b == null) {
-            System.out.println("User or Book not found.");
+            System.out.println("Usuario o libro no encontrado.");
             return false;
         }
 
         if (b.isAvailable()) {
             b.setAvailable(false);
-            activeLoans.add(new Loan(userId, isbn));
+            prestamosActivos.add(new Loan(userId, isbn));
             u.getLoanHistory().addFirst(isbn);
-            operationHistory.addFirst("BORROW " + userId + " -> " + isbn);
+            historialOperaciones.addFirst("PRESTAR " + userId + " -> " + isbn);
 
-            // inverse: return the book
-            undoStack.push(new Operation(OperationType.RETURN, userId, isbn, null));
-            System.out.println("Loan OK.");
+            // inversa: devolver el libro
+            pilaDeshacer.push(new Operation(OperationType.RETURN, userId, isbn, null));
+            System.out.println("Préstamo OK.");
             return true;
         } else {
             // enqueue reservation
             Queue<String> q = b.getWaitingList();
             q.add(userId);
-            operationHistory.addFirst("ENQUEUE " + userId + " " + isbn);
-            // inverse: remove one occurrence from queue
-            undoStack.push(new Operation(OperationType.ENQUEUE_RESERVATION, userId, isbn, null));
-            System.out.println("Book busy. Added to waiting list (pos " + q.size() + ").");
+            historialOperaciones.addFirst("ENCOLAR " + userId + " " + isbn);
+            // inversa: eliminar una ocurrencia de la cola
+            pilaDeshacer.push(new Operation(OperationType.ENQUEUE_RESERVATION, userId, isbn, null));
+            System.out.println("Libro ocupado. Añadido a la lista de espera (pos " + q.size() + ").");
             return false;
         }
     }
 
     public boolean returnBook(String userId, String isbn) {
         int idx = -1;
-        for (int i = 0; i < activeLoans.size(); i++) {
-            Loan l = activeLoans.get(i);
+        for (int i = 0; i < prestamosActivos.size(); i++) {
+            Loan l = prestamosActivos.get(i);
             if (l.getUserId().equals(userId) && l.getIsbn().equals(isbn)) {
                 idx = i;
                 break;
             }
         }
         if (idx == -1) {
-            System.out.println("Active loan not found.");
+            System.out.println("Préstamo activo no encontrado.");
             return false;
         }
-
-        activeLoans.remove(idx);
-        operationHistory.addFirst("RETURN " + userId + " <- " + isbn);
-        // inverse: re-borrow
-        undoStack.push(new Operation(OperationType.BORROW, userId, isbn, null));
+        prestamosActivos.remove(idx);
+        historialOperaciones.addFirst("DEVOLVER " + userId + " <- " + isbn);
+        // inversa: volver a prestar
+        pilaDeshacer.push(new Operation(OperationType.BORROW, userId, isbn, null));
 
         Book b = findBook(isbn);
         if (b != null) {
-            if (b.getWaitingList().isEmpty()) {
+            Queue<String> q = b.getWaitingList(); // usar la cola de IDs de usuario
+            if (q == null || q.isEmpty()) {
                 b.setAvailable(true);
             } else {
-                String nextUser = b.getWaitingList().poll();
+                String nextUser = q.poll();
                 b.setAvailable(false);
-                activeLoans.add(new Loan(nextUser, isbn));
+                prestamosActivos.add(new Loan(nextUser, isbn));
                 User nu = findUser(nextUser);
                 if (nu != null)
                     nu.getLoanHistory().addFirst(isbn);
-                operationHistory.addFirst("AUTO_BORROW -> " + nextUser + " " + isbn);
+                historialOperaciones.addFirst("AUTO_PRESTAR -> " + nextUser + " " + isbn);
             }
         }
-        System.out.println("Return OK.");
+        System.out.println("Devolución OK.");
         return true;
     }
 
     public void listActiveLoans() {
-        System.out.println("=== Active Loans ===");
-        Iterator<Loan> it = activeLoans.iterator();
+    System.out.println("=== Préstamos activos ===");
+        Iterator<Loan> it = prestamosActivos.iterator();
         while (it.hasNext())
             System.out.println(it.next());
     }
 
     public void printHistory() {
-        System.out.println("=== Operation History (latest first) ===");
-        Iterator<String> it = operationHistory.iterator();
+    System.out.println("=== Historial de operaciones (últimas primero) ===");
+        Iterator<String> it = historialOperaciones.iterator();
         while (it.hasNext())
             System.out.println(it.next());
     }
 
     // ===== UNDO =====
     public boolean undoLast() {
-        String msg = "Undo last operation ok. ";
-        if (undoStack.isEmpty()) {
-            System.out.println("Nothing to undo.");
+        String msg = "Deshacer última operación OK. ";
+        if (pilaDeshacer.isEmpty()) {
+            System.out.println("Nada que deshacer.");
             return false;
         }
-        Operation op = undoStack.pop();
+        Operation op = pilaDeshacer.pop();
         OperationType t = op.getType();
 
         if (t == OperationType.REMOVE_BOOK){
-            msg += "Removed book: " + op.getA();
+            msg += "Libro eliminado: " + op.getA();
+            System.out.println(msg);
             return removeBook(op.getA());
         }
 
@@ -281,7 +283,7 @@ public class Library {
                 oldAuthor = pair.substring(0, sep);
                 oldCategory = pair.substring(sep + 1);
             }
-            msg += "Restored book: " + isbn;
+            msg += "Libro restaurado: " + isbn;
             System.out.println(msg);
             return updateBook(isbn, oldTitle, oldAuthor, oldCategory);
         }
@@ -295,30 +297,30 @@ public class Library {
                 b.setCategory(pair.substring(sep + 1));
             }
             addBook(b);
-            msg += "Re-added book: " + b.getIsbn();
+            msg += "Libro re-insertado: " + b.getIsbn();
             System.out.println(msg);
             return true;
         }
 
         if (t == OperationType.REMOVE_USER){
-            msg += "Removed user: " + op.getA();
+            msg += "Usuario eliminado: " + op.getA();
             System.out.println(msg);
             return removeUser(op.getA());
         }
 
         if (t == OperationType.REGISTER_USER) {
             registerUser(new User(op.getA(), op.getB()));
-            msg += "Re-registered user: " + op.getA();
+            msg += "Usuario re-registrado: " + op.getA();
             System.out.println(msg);
             return true;
         }
         if (t == OperationType.RETURN){
-            msg += "Returned book: " + op.getA();
+            msg += "Libro devuelto: " + op.getA();
             System.out.println(msg);
             return returnBook(op.getA(), op.getB());
         }
         if (t == OperationType.BORROW){
-            msg += "Borrowed book: " + op.getA();
+            msg += "Libro prestado: " + op.getA();
             System.out.println(msg);
             return borrow(op.getA(), op.getB());
         }
@@ -340,11 +342,27 @@ public class Library {
                 while (it.hasNext())
                     q.add(it.next());
             }
-            System.out.println("Undo reservation queue change.");
+            System.out.println("Deshacer cambio en la cola de reservas.");
             return true;
         }
 
-        System.out.println("Unknown operation.");
+        System.out.println("Operación desconocida.");
         return false;
     }
+
+    /**
+     * Llamar cuando se devuelve un libro para reasignarlo al siguiente en la lista de espera.
+     * Ajusta según la estructura de préstamos (Loan) existente en tu proyecto.
+     */
+    public User assignBookToNextWaitingUser(Book book) {
+        if (book == null) return null;
+        // Book mantiene una cola de IDs de usuario (String). Usar pollWaitingUser()
+        String nextUserId = book.pollWaitingUser();
+        if (nextUserId == null) return null;
+
+        // Convertir ID a User usando findUser; el llamador puede crear el Loan.
+        return findUser(nextUserId);
+    }
+
+    // Llamar assignBookToNextWaitingUser(book) después de procesar la devolución
 }

@@ -1,6 +1,3 @@
-/*
- * Archivo movido a backup: usar la versión canónica en LIBRERIA/Book.java
- * Este archivo queda comentado para evitar duplicados durante la compilación.
 public class Book {
     private String title;
     private String author;
@@ -18,4 +15,3 @@ public class Book {
     // Add getters and setters
     // Add a toString() method to display book info
 }
-*/
